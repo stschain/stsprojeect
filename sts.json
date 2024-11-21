@@ -1,0 +1,61 @@
+await tehtarik.relayMessage(msg.key.remoteJid, msg.message, {
+ messageId: msg.key.id
+})
+        break
+      }
+      case 'listpascabayar': {
+        if (!isRegistered(sender)) return await replyText(alerts.daftar)
+        let Pascabayar = JSON.parse(fs.readFileSync("./database/kategori/pascabayar.json"))
+        if (Pascabayar.length === 0) return await replyText("Produk Voucher Masih Kosong!")
+            let data = []
+Object.keys(Voucher).forEach((p) => {
+          if (Voucher[p].brand) {
+            let dt = {
+              title: `📠 | ${Pascabayar[p].nama.toUpperCase()}`,
+              description: `Menampilkan Daftar Produk ${Pascabayar[p].nama.toUpperCase()}`,
+              id: `lst ${Pascabayar[p].nama}`
+            }
+            data.push(dt)
+          }
+        })
+let sections = [{
+          title: "LIST PRODUK PASCABAYAR",
+          rows: data
+        }]
+        let lstt = {
+          title: "LIST PRODUK PASCABAYAR",
+          sections
+        }
+        let msg = generateWAMessageFromContent(from, {
+ viewOnceMessage: {
+ message: {
+ "messageContextInfo": {
+ "deviceListMetadata": {},
+ "deviceListMetadataVersion": 2
+ },
+ interactiveMessage: proto.Message.InteractiveMessage.create({
+ contextInfo: {
+ mentionedJid: [sender], 
+ isForwarded: false
+ }, 
+body: proto.Message.InteractiveMessage.Body.create({
+ text: `*${global.namabot}*
+ 
+> Klik Tombol Dibawah Ini Untuk Menampikan Daftar Voucher
+`
+ }),
+footer: proto.Message.InteractiveMessage.Footer.create({
+ text: `_*${global.footer.toUpperCase()}*_`
+ }),
+ nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
+ buttons: [ 
+{
+ "name": "single_select",
+"buttonParamsJson": JSON.stringify(lstt)
+ }
+ ]
+ })
+ })
+ }
+ }
+}, {})
